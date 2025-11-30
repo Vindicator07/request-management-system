@@ -1,4 +1,13 @@
+# Root ignore
 node_modules/
 .env
-dist/
-build/
+.env.*
+.env.local
+
+# Backend ignores
+request-management-backend/node_modules/
+request-management-backend/.env
+
+# Frontend ignores
+request-management-frontend/node_modules/
+request-management-frontend/.env
