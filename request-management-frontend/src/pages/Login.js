@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api";
 
@@ -9,6 +9,7 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
       const res = await API.post("/auth/login", { email, password });
 
@@ -24,9 +25,10 @@ export default function Login() {
         ? "/dashboard/manager"
         : "/dashboard/employee"
       );
-      
+
     } catch (err) {
-      alert("Invalid credentials");
+      console.error(err);
+      alert("Invalid credentials, please try again.");
     }
   };
 
@@ -52,10 +54,15 @@ export default function Login() {
           required
         />
 
-        <button type="submit">Login</button>
+        <button type="submit" style={{ width: "100%", marginBottom: 10 }}>
+          Login
+        </button>
       </form>
 
-      <button onClick={() => navigate("/signup")} style={{ marginTop: 10 }}>
+      <button
+        onClick={() => navigate("/signup")}
+        style={{ width: "100%", marginTop: 10 }}
+      >
         Go to Signup
       </button>
     </div>
