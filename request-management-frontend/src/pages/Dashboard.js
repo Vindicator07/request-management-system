@@ -11,20 +11,12 @@ export default function Dashboard() {
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
 
-  // Redirect to login if missing token / user
+  // Redirect to login if not authenticated
   useEffect(() => {
     if (!user || !token) {
       navigate("/login");
-      return;
     }
-
-    // redirect to proper route depending on role
-    if (user.role === "MANAGER") {
-      navigate("/dashboard/manager");
-    } else {
-      navigate("/dashboard/employee");
-    }
-  }, []);
+  }, [token, user, navigate]);
 
   const fetchRequests = async () => {
     try {
@@ -56,10 +48,7 @@ export default function Dashboard() {
         Logout
       </button>
 
-      {/* Employee can create requests */}
       {user.role === "EMPLOYEE" && <CreateRequest reload={fetchRequests} />}
-
-      {/* Both roles can view list */}
       <RequestList requests={requests} reload={fetchRequests} />
     </div>
   );

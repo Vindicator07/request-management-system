@@ -5,34 +5,26 @@ import Dashboard from "./pages/Dashboard";
 
 function App() {
   const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user"));
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={token ? <Navigate to="/dashboard" /> : <Login />} />
-        <Route path="/signup" element={<Signup />} />
+        {/* Public Routes */}
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
 
-        {/* Main dashboard router */}
+        {/* Role Based Dashboard Routes */}
         <Route
-          path="/dashboard"
+          path="/dashboard/manager"
+          element={token ? <Dashboard /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/dashboard/employee"
           element={token ? <Dashboard /> : <Navigate to="/login" />}
         />
 
-        {/* Dedicated manager + employee routes */}
-        <Route
-          path="/dashboard/manager"
-          element={token && user?.role === "MANAGER" ? <Dashboard /> : <Navigate to="/login" />}
-        />
-
-        <Route
-          path="/dashboard/employee"
-          element={token && user?.role === "EMPLOYEE" ? <Dashboard /> : <Navigate to="/login" />}
-        />
-
-        {/* Catch all unhandled paths */}
-        <Route path="*" element={<Navigate to="/" />} />
+        {/* Default Route */}
+        <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
   );

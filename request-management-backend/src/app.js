@@ -4,6 +4,7 @@ const cors = require('cors');
 const sequelize = require('./config/db');
 const authRoutes = require('./routes/auth.routes');
 const requestRoutes = require('./routes/request.routes');
+const { auth } = require("./middleware/auth"); // <-- ADD THIS
 
 dotenv.config();
 
@@ -18,15 +19,18 @@ app.use((req, _res, next) => {
   next();
 });
 
-// ✅ HEALTH / ROOT ROUTE
+// Health route
 app.get('/', (_req, res) => {
   res.send('API running');
 });
 
+// Public routes
 app.use('/auth', authRoutes);
-app.use('/requests', requestRoutes);
 
-// simple error handler
+// Protected routes
+app.use('/requests', auth, requestRoutes);
+
+// Error handler
 app.use((err, _req, res, _next) => {
   console.error(err);
   res.status(err.status || 500).json({
@@ -37,7 +41,7 @@ app.use((err, _req, res, _next) => {
 async function init() {
   try {
     await sequelize.authenticate();
-    await sequelize.sync({ alter: true }); // for case study it's fine
+    await sequelize.sync({ alter: true });
     console.log('Database connected & synced');
   } catch (error) {
     console.error('DB init error:', error);
