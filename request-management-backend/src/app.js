@@ -18,6 +18,11 @@ app.use((req, _res, next) => {
   next();
 });
 
+// ✅ HEALTH / ROOT ROUTE
+app.get('/', (_req, res) => {
+  res.send('API running');
+});
+
 app.use('/auth', authRoutes);
 app.use('/requests', requestRoutes);
 
