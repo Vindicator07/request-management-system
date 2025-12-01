@@ -9,22 +9,18 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Public Routes */}
-        <Route path="/login" element={<Login />} />
+        {/* Default route */}
+        <Route path="/" element={token ? <Navigate to="/dashboard" /> : <Login />} />
+
+        {/* Auth routes */}
         <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
 
-        {/* Role Based Dashboard Routes */}
+        {/* Dashboard route */}
         <Route
-          path="/dashboard/manager"
+          path="/dashboard"
           element={token ? <Dashboard /> : <Navigate to="/login" />}
         />
-        <Route
-          path="/dashboard/employee"
-          element={token ? <Dashboard /> : <Navigate to="/login" />}
-        />
-
-        {/* Default Route */}
-        <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
   );

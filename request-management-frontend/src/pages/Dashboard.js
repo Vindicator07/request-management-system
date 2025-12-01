@@ -6,37 +6,39 @@ import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
   const [requests, setRequests] = useState([]);
 
-  const user = JSON.parse(localStorage.getItem("user"));
-  const token = localStorage.getItem("token");
-
-  // Redirect to login if not authenticated
   useEffect(() => {
-    if (!user || !token) {
+    const storedUser = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
+
+    if (!storedUser || !token) {
       navigate("/login");
+    } else {
+      setUser(JSON.parse(storedUser));
     }
-  }, [token, user, navigate]);
+  }, [navigate]);
 
   const fetchRequests = async () => {
     try {
       const res = await API.get("/requests");
       setRequests(res.data);
     } catch (err) {
-      console.log("Error fetching requests:", err.response?.data);
+      console.log("Error fetching requests", err.response?.data);
     }
   };
 
   useEffect(() => {
-    if (token) fetchRequests();
-  }, [token]);
+    fetchRequests();
+  }, []);
 
   const logout = () => {
     localStorage.clear();
     navigate("/login");
   };
 
-  if (!user) return null;
+  if (!user) return <p>Loading...</p>;
 
   return (
     <div className="container">
@@ -49,6 +51,7 @@ export default function Dashboard() {
       </button>
 
       {user.role === "EMPLOYEE" && <CreateRequest reload={fetchRequests} />}
+
       <RequestList requests={requests} reload={fetchRequests} />
     </div>
   );

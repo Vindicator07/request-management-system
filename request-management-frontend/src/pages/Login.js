@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api";
 
@@ -9,26 +9,18 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     try {
       const res = await API.post("/auth/login", { email, password });
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      const role = res.data.user.role;
-
       alert("Login successful!");
 
-      // Redirect based on role
-      navigate(role === "MANAGER"
-        ? "/dashboard/manager"
-        : "/dashboard/employee"
-      );
-
+      // Redirect after storing user info
+      navigate("/dashboard");
     } catch (err) {
-      console.error(err);
-      alert("Invalid credentials, please try again.");
+      alert("Invalid credentials");
     }
   };
 
@@ -54,15 +46,10 @@ export default function Login() {
           required
         />
 
-        <button type="submit" style={{ width: "100%", marginBottom: 10 }}>
-          Login
-        </button>
+        <button type="submit">Login</button>
       </form>
 
-      <button
-        onClick={() => navigate("/signup")}
-        style={{ width: "100%", marginTop: 10 }}
-      >
+      <button onClick={() => navigate("/signup")} style={{ marginTop: 10 }}>
         Go to Signup
       </button>
     </div>
