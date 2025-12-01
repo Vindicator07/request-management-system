@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://request-management-system-gjgc.onrender.com/:path*"
+    }
+  ]
+}
